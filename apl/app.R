@@ -52,6 +52,7 @@ ui <- navbarPage(
                           br(),
                           plotOutput("plot_dist_pop", height = "480px"),
                           textOutput("teks_dist_pop"),
+                          br()
                  ),
                  #### Beberapa sampel ----
                  tabPanel("Beberapa Sampel",
@@ -793,7 +794,7 @@ server <- function(input, output) {
     }
     
     alfa_ruas <- function(x) {
-      -1 / 1372000 * (x - 20)^2 + 1
+      1 / 1372000 * (x - 1000)^2 + 3 / 10
     }
     
     data_stat <- stat_set_sampel() %>% 
