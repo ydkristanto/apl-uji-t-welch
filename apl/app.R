@@ -171,7 +171,7 @@ ui <- navbarPage(
                  div(h4("Kode sumber",
                         style = "font-size: inherit;
                              font-weight: bold")),
-                 div(p("Kode sumber aplikasi ini tersedia di", a("repositori Github.", href = "https://github.com/ydkristanto/apl-dist-t", target = "_blank"), "Jika Anda ingin melaporkan masalah atau meminta fitur tambahan terhadap aplikasi ini, silakan", a("buat sebuah isu", href = "https://github.com/ydkristanto/apl-dist-t/issues", target = "_blank"), "atau lebih baik lagi", a("minta penarikan", href = "https://github.com/ydkristanto/apl-dist-t/pulls", target = "_blank"), "di repositori tersebut."))
+                 div(p("Kode sumber aplikasi ini tersedia di", a("repositori Github.", href = "https://github.com/ydkristanto/apl-uji-t-welch", target = "_blank"), "Jika Anda ingin melaporkan masalah atau meminta fitur tambahan terhadap aplikasi ini, silakan", a("buat sebuah isu", href = "https://github.com/ydkristanto/apl-uji-t-welch/issues", target = "_blank"), "atau lebih baik lagi", a("minta penarikan", href = "https://github.com/ydkristanto/apl-uji-t-welch/pulls", target = "_blank"), "di repositori tersebut."))
                ),
                wellPanel(
                  div(h4("Lisensi",
@@ -182,11 +182,11 @@ ui <- navbarPage(
                )
              ),
              mainPanel(
-               div(h3("Aplikasi Shiny Distribusi t")),
                fluidRow(
                  column(9,
-                        div(p("Aplikasi ini mengajak Anda untuk sejenak mengapresiasi buah pikiran William Sealy Gosset. Ahli Statistika yang akrab dengan nama pena Student atau Mahasiswa ini telah mengkreasi distribusi t untuk menambal kelemahan distribusi normal baku sebagai distribusi sampling rerata sampel-sampel yang relatif kecil."), align = "justify"),
-                        div(p("Tujuan aplikasi ini adalah untuk mendemonstrasikan kekuatan distribusi t tersebut. Distribusi ini lebih baik dibandingkan dengan distribusi normal baku untuk memodelkan distribusi sampling rerata sampel-sampel yang kecil, ketika rerata dan simpangan baku populasi diestimasi dengan rerata dan simpangan baku sampel."), align = "justify"),
+                        div(h3("Aplikasi Shiny Ketegaran dan Kuasa Uji t Klasik dan Welch")),
+                        div(p("Aplikasi interaktif ini dapat digunakan untuk membandingkan dua jenis uji t dua sampel, yaitu uji t klasik dan uji t Welch. Kedua jenis uji t tersebut memiliki perbedaan dalam hal asumsi-asumsi statistiknya. Uji t klasik mengasumsikan homogenitas variansi sedangkan uji t Welch tidak."), align = "justify"),
+                        div(p("Aplikasi ini menggunakan dua ukuran dalam membandingkan kedua uji t tersebut. Kedua ukuran tersebut adalah ketegaran dan kuasa ujinya. Ketegaran dapat dilihat pada galat jenis I. Kuasa uji dapat diselidiki ketika hipotesis nolnya salah. Hipotesis nol yang digunakan dalam aplikasi ini adalah bahwa kedua populasinya memiliki rerata yang sama."), align = "justify"),
                         hr(),
                         div(p("Aplikasi interaktif ini dikembangkan dengan menggunakan bahasa pemrogram", a("R", href = "https://www.R-project.org/", target = "_blank"), "dan paket", a("Shiny.", href = "https://CRAN.R-project.org/package=shiny", target = "_blank"), "Paket", a("shinylive", href = "https://posit-dev.github.io/r-shinylive/", target = "_blank"), "digunakan untuk mengekspor aplikasi ini agar dapat dijalankan di peramban web tanpa peladen R yang terpisah."), align = "justify"),
                         div(p("Pengembang dan pemelihara aplikasi ini adalah", a("Yosep Dwi Kristanto,", href = "https://people.usd.ac.id/~ydkristanto/", target = "_blank"), "seorang dosen dan peneliti di program studi", a("Pendidikan Matematika,", href = "https://usd.ac.id/s1pmat", target = "_blank"), a("Universitas Sanata Dharma,", href = "https://www.usd.ac.id/", target = "_blank"), "Yogyakarta."), align = "justify")
