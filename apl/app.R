@@ -1,6 +1,7 @@
 # Paket ----
 library(shiny)
 library(tidyverse)
+library(scales)
 
 # UI ----
 ui <- navbarPage(
@@ -20,12 +21,12 @@ ui <- navbarPage(
                ),
                wellPanel(
                  sliderInput("mu_1", "Rerata populasi 1:",
-                             min = 10, max = 100, value = 50),
+                             min = 40, max = 60, value = 50),
                  sliderInput("sigma_1", "Simpangan baku populasi 1:",
                              min = 1, max = 20, value = 10),
                  hr(),
                  sliderInput("mu_2", "Rerata populasi 2:",
-                             min = 10, max = 100, value = 50),
+                             min = 40, max = 60, value = 50),
                  sliderInput("sigma_2", "Simpangan baku populasi 2:",
                              min = 1, max = 20, value = 10)
                ),
@@ -115,10 +116,42 @@ ui <- navbarPage(
                  #### Uji t klasik dan Welch ----
                  tabPanel("Ketegaran dan Kuasa",
                           br(),
+                          conditionalPanel(condition = "input.alternatif == 'tak_sama'",
+                           div(p("Hipotesis Nol dan Alternatifnya",
+                                 style = "font-weight: bold;"),
+                               p("Hipotesis nol dan hipotesis alternatif dalam uji ini adalah sebagai berikut."),
+                               tags$ul(
+                                 tags$li("H_0: Rerata kedua populasi sama. Hal ini dapat disimbolkan dengan μ1 = μ2 atau μ1 - μ2 = 0."),
+                                 tags$li("H_A: Rerata kedua populasi tersebut tidak sama, yaitu μ1 ≠ μ2 atau μ1 - μ2 ≠ 0.")
+                                 ), style = "padding: 10px; background-color: whitesmoke;")
+                                           ),
+                          conditionalPanel(condition = "input.alternatif == 'lebih'",
+                           div(p("Hipotesis Nol dan Alternatifnya",
+                                 style = "font-weight: bold;"),
+                               p("Hipotesis nol dan hipotesis alternatif dalam uji ini adalah sebagai berikut."),
+                               tags$ul(
+                                 tags$li("H_0: Rerata kedua populasi sama. Hal ini dapat disimbolkan dengan μ1 = μ2 atau μ1 - μ2 = 0."),
+                                 tags$li("H_A: Rerata populasi pertama lebih dari populasi kedua, yaitu μ1 > μ2 atau μ1 - μ2 > 0.")
+                               ), style = "padding: 10px; background-color: whitesmoke;")
+                          ),
+                          conditionalPanel(condition = "input.alternatif == 'kurang'",
+                           div(p("Hipotesis Nol dan Alternatifnya",
+                                 style = "font-weight: bold;"),
+                               p("Hipotesis nol dan hipotesis alternatif dalam uji ini adalah sebagai berikut."),
+                               tags$ul(
+                                 tags$li("H_0: Rerata kedua populasi sama. Hal ini dapat disimbolkan dengan μ1 = μ2 atau μ1 - μ2 = 0."),
+                                 tags$li("H_A: Rerata populasi pertama kurang dari populasi kedua, yaitu μ1 < μ2 atau μ1 - μ2 < 0.")
+                               ), style = "padding: 10px; background-color: whitesmoke;")
+                          ),
+                          br(),
                           plotOutput("plot_dist_stat"),
                           textOutput("teks_dist_stat"),
                           br(),
-                          plotOutput("plot_df")
+                          plotOutput("plot_perbandingan"),
+                          textOutput("teks_perbandingan"),
+                          hr(),
+                          helpText(textOutput("teks_info_perbandingan")),
+                          br()
                  )
                  )
              )
@@ -128,13 +161,41 @@ ui <- navbarPage(
   tabPanel("Informasi",
            sidebarLayout(
              sidebarPanel(
-               
+               wellPanel(
+                 div(h4("Deskripsi",
+                        style = "font-size: inherit;
+                             font-weight: bold")),
+                 div(p("Aplikasi Shiny ini dapat digunakan untuk membandingkan ketegaran dan kuasa uji t klasik dan Welch."))
+               ),
+               wellPanel(
+                 div(h4("Kode sumber",
+                        style = "font-size: inherit;
+                             font-weight: bold")),
+                 div(p("Kode sumber aplikasi ini tersedia di", a("repositori Github.", href = "https://github.com/ydkristanto/apl-dist-t", target = "_blank"), "Jika Anda ingin melaporkan masalah atau meminta fitur tambahan terhadap aplikasi ini, silakan", a("buat sebuah isu", href = "https://github.com/ydkristanto/apl-dist-t/issues", target = "_blank"), "atau lebih baik lagi", a("minta penarikan", href = "https://github.com/ydkristanto/apl-dist-t/pulls", target = "_blank"), "di repositori tersebut."))
+               ),
+               wellPanel(
+                 div(h4("Lisensi",
+                        style = "font-size: inherit;
+                             font-weight: bold")),
+                 div(p("Lisensi MIT"),
+                     p("Copyright (c) 2024 Yosep Dwi Kristanto"))
+               )
              ),
              mainPanel(
-               
+               div(h3("Aplikasi Shiny Distribusi t")),
+               fluidRow(
+                 column(9,
+                        div(p("Aplikasi ini mengajak Anda untuk sejenak mengapresiasi buah pikiran William Sealy Gosset. Ahli Statistika yang akrab dengan nama pena Student atau Mahasiswa ini telah mengkreasi distribusi t untuk menambal kelemahan distribusi normal baku sebagai distribusi sampling rerata sampel-sampel yang relatif kecil."), align = "justify"),
+                        div(p("Tujuan aplikasi ini adalah untuk mendemonstrasikan kekuatan distribusi t tersebut. Distribusi ini lebih baik dibandingkan dengan distribusi normal baku untuk memodelkan distribusi sampling rerata sampel-sampel yang kecil, ketika rerata dan simpangan baku populasi diestimasi dengan rerata dan simpangan baku sampel."), align = "justify"),
+                        hr(),
+                        div(p("Aplikasi interaktif ini dikembangkan dengan menggunakan bahasa pemrogram", a("R", href = "https://www.R-project.org/", target = "_blank"), "dan paket", a("Shiny.", href = "https://CRAN.R-project.org/package=shiny", target = "_blank"), "Paket", a("shinylive", href = "https://posit-dev.github.io/r-shinylive/", target = "_blank"), "digunakan untuk mengekspor aplikasi ini agar dapat dijalankan di peramban web tanpa peladen R yang terpisah."), align = "justify"),
+                        div(p("Pengembang dan pemelihara aplikasi ini adalah", a("Yosep Dwi Kristanto,", href = "https://people.usd.ac.id/~ydkristanto/", target = "_blank"), "seorang dosen dan peneliti di program studi", a("Pendidikan Matematika,", href = "https://usd.ac.id/s1pmat", target = "_blank"), a("Universitas Sanata Dharma,", href = "https://www.usd.ac.id/", target = "_blank"), "Yogyakarta."), align = "justify")
+                 )
+                 # di sini
+               )
              )
            )
-           )
+  )
 )
 
 
@@ -831,8 +892,119 @@ server <- function(input, output) {
     persen_klasik <- round(stat_signif$persen_menolak[1], 2)
     persen_welch <- round(stat_signif$persen_menolak[2], 2)
     
-    paste0("Gambar 4: Statistik t dari selisih rerata setiap pasangan sampel yang dipilih secara acak dari populasi pertama dan kadua. Dengan tingkat signifikansi ", sig, ", persentase penolakan hipotesis nol ketika menggunakan uji t klasik adalah ", persen_klasik, "%. Ketika menggunakan uji Welch, persentasenya adalah ", persen_welch, "%.")
+    paste0("Gambar 4.a: Statistik t dari selisih rerata setiap pasangan sampel yang dipilih secara acak dari populasi pertama dan kedua. Dengan tingkat signifikansi ", sig, ", persentase penolakan hipotesis nol ketika menggunakan uji t klasik adalah ", persen_klasik, "%. Ketika menggunakan uji Welch, persentasenya adalah ", persen_welch, "%.")
     
+  })
+  
+  ## Plot perbandingan ----
+  output$plot_perbandingan <- renderPlot({
+    
+    sig <- input$sig
+    data_stat <- stat_set_sampel() %>% 
+      mutate(p_signif = p <= sig)
+    ringkasan <- data_stat %>% 
+      group_by(uji_t) %>% 
+      summarise(signif = mean(p_signif)) %>% 
+      mutate(persen_signif = paste0(round(signif * 100, 2), "%"))
+    
+    x_maks <- max(ringkasan$signif, sig)
+    x_min <- min(ringkasan$signif, sig)
+    x_range <- x_maks - x_min
+    plot_range <- c(x_min - x_range / 4,
+                    x_maks + x_range / 4)
+    
+    slsh_persen <- round(abs(ringkasan$signif[1] - 
+                               ringkasan$signif[2]) * 100, 2)
+    pos_x <- min(ringkasan$signif[1], ringkasan$signif[2]) + 
+      slsh_persen / 200
+    
+    ggplot(ringkasan) +
+      geom_segment(aes(x = signif, xend = sig,
+                       y = uji_t, yend = uji_t,
+                       col = uji_t),
+                   show.legend = FALSE, linewidth = 5,
+                   alpha = .6) +
+      geom_segment(aes(x = sig, xend = sig,
+                       y = 0, yend = Inf),
+                   linewidth = 3, alpha = .6) +
+      geom_segment(aes(x = signif[1], xend = signif[2],
+                       y = factor(1), yend = factor(1)),
+                   show.legend = FALSE, linewidth = 5, color = "#7570b3",
+                   alpha = .2) +
+      geom_point(aes(x = signif, y = factor(1)),
+                 size = 8, color = "#7570b3") +
+      geom_point(aes(x = signif,
+                     y = uji_t,
+                     col = uji_t),
+                 size = 8) +
+      geom_label(aes(x = signif, y = uji_t,
+                     label = persen_signif, col = uji_t),
+                 fill = "white", fontface = "bold", size = 5,
+                 nudge_y = .25, label.r = unit(0.1, "lines"),
+                 show.legend = FALSE) +
+      geom_label(aes(x = pos_x, y = factor(1),
+                     label = paste0(slsh_persen, "%")),
+                 color = "#7570b3", fill = "white", fontface = "bold",
+                 size = 5, label.r = unit(0.1, "lines"),
+                 show.legend = FALSE) +
+      scale_x_continuous(labels = label_percent(scale = 100),
+                         limits = plot_range) +
+      scale_color_brewer(palette = "Dark2", name = "Distribusi sampling") +
+      theme_bw(base_size = 16) +
+      theme(legend.position = "top",
+            axis.title.y = element_blank(),
+            axis.text.y = element_blank(),
+            axis.ticks.y = element_blank(),
+            plot.title = element_text(face = "bold")) +
+      labs(title = "Selisih Persentase Penolakan Hipotesis Nol",
+           x = "Persentase")
+  })
+  
+  
+  ## Teks perbandingan ----
+  output$teks_perbandingan <- renderText({
+    mu_1 <- input$mu_1
+    mu_2 <- input$mu_2
+    sig <- input$sig
+    data_stat <- stat_set_sampel() %>% 
+      mutate(p_signif = p <= sig)
+    ringkasan <- data_stat %>% 
+      group_by(uji_t) %>% 
+      summarise(signif = mean(p_signif)) %>% 
+      mutate(persen_signif = paste0(round(signif * 100, 2), "%"))
+    
+    slsh_persen <- round(abs(ringkasan$signif[1] - 
+                               ringkasan$signif[2]) * 100, 2)
+    
+    if (mu_1 == mu_2) {
+      if (ringkasan$signif[1] == ringkasan$signif[2]) {
+        "Gambar 4.b: Selisih persentase penolakan hipotesis nol dari uji t klasik dan uji t Welch adalah 0%. Kedua uji ini memiliki persentase galat tipe I* yang sama."
+      } else if (ringkasan$signif[1] < ringkasan$signif[2]) {
+        paste0("Gambar 4.b: Persentase penolakan hipotesis nol dari uji t klasik ", slsh_persen, "% kurang dari uji t Welch. Dengan demikian, dalam simulasi ini uji t klasik lebih baik dibandingkan uji t Welch karena memiliki galat tipe I* yang lebih kecil.")
+      } else {
+        paste0("Gambar 4.b: Persentase penolakan hipotesis nol dari uji t Welch ", slsh_persen, "% lebih kecil dari uji t klasik. Dengan demikian, dalam simulasi ini uji t Welch lebih baik dibandingkan uji t klasik karena memiliki galat tipe I* yang lebih kecil.")
+      }
+    } else {
+      if (ringkasan$signif[1] == ringkasan$signif[2]) {
+        "Gambar 4.b: Selisih persentase penolakan hipotesis nol dari uji t klasik dan uji t Welch adalah 0%. Kedua uji ini memiliki kuasa* yang sama."
+      } else if (ringkasan$signif[1] < ringkasan$signif[2]) {
+        paste0("Gambar 4.b: Persentase penolakan hipotesis nol dari uji t Welch ", slsh_persen, "% lebih dari uji t klasik. Dengan demikian, dalam simulasi ini uji t Welch lebih baik dibandingkan uji t klasik karena memiliki kuasa* yang lebih besar.")
+      } else {
+        paste0("Gambar 4.b: Persentase penolakan hipotesis nol dari uji t klasik ", slsh_persen, "% lebih dari uji t Welch. Dengan demikian, dalam simulasi ini uji t klasik lebih baik dibandingkan uji t Welch karena memiliki kuasa* yang lebih besar.")
+      }
+    }
+    
+  })
+  
+  ## Teks informasi tambahan perbandingan ----
+  output$teks_info_perbandingan <- renderText({
+    mu_1 <- input$mu_1
+    mu_2 <- input$mu_2
+    if (mu_1 == mu_2) {
+      "*Galat tipe I merupakan kekeliruan karena menolak hipotesis nol yang sebenarnya hipotesis tersebut benar."
+    } else {
+      "*Kuasa merupakan ketepatan dalam menolak hipotesis nol karena hipotesis tersebut sebenarnya memang salah."
+    }
   })
   
 }
