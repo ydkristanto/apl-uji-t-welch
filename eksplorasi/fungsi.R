@@ -91,8 +91,8 @@ stat_sampel <- function(data) {
     pivot_wider(names_from = populasi, values_from = c(n, mean, var))
   data_stat <- rangkuman_lebar %>% 
     mutate(selisih_mean = mean_1 - mean_2,
-           var_gabung = ((n1 - 1) * var_1 + (n2 - 1) * var_2) / 
-             (n1 + n2 - 2),
+           var_gabung = ((n_1 - 1) * var_1 + (n_2 - 1) * var_2) / 
+             (n_1 + n_2 - 2),
            A = var_1 / n_1,
            B = var_2 / n_2) %>% 
     mutate(df_t = n_1 + n_2 - 2,
@@ -100,8 +100,8 @@ stat_sampel <- function(data) {
            stat_t = selisih_mean / sqrt(var_gabung * (1 / n_1 + 1 / n_2)),
            stat_t_w = selisih_mean / sqrt(var_1 / n_1 + var_2 / n_2)) %>% 
     # Uji dua ekor
-    mutate(p_t = 2 * pt(stat_t, df = df_t, lower.tail = TRUE),
-           p_t_w = 2 * pt(stat_t_w, df = df_w, lower.tail = TRUE)) %>% 
+    mutate(p_t = 2 * pt(-abs(stat_t), df = df_t, lower.tail = TRUE),
+           p_t_w = 2 * pt(-abs(stat_t_w), df = df_w, lower.tail = TRUE)) %>% 
     select(id_sampel, n_1, n_2, selisih_mean, df_t, df_w,
            stat_t, stat_t_w, p_t, p_t_w)
   
@@ -116,6 +116,9 @@ stat_sampel(set_sampel1)
 data_stat <- function(n1, n2, k, mu1, sigma1, mu2, sigma2) {
   set_sampel <- set_sampel(n1, n2, k, mu1, sigma1, mu2, sigma2)
   data_stat <- stat_sampel(set_sampel)
+  return(data_stat)
 }
 
-# Uji coba fungsi data_stat
+# Fungsi baru ----
+
+
