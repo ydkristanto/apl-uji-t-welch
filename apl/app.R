@@ -21,12 +21,12 @@ ui <- navbarPage(
                ),
                wellPanel(
                  sliderInput("mu_1", "Rerata populasi 1:",
-                             min = 40, max = 60, value = 50),
+                             min = 45, max = 55, value = 50),
                  sliderInput("sigma_1", "Simpangan baku populasi 1:",
                              min = 1, max = 20, value = 10),
                  hr(),
                  sliderInput("mu_2", "Rerata populasi 2:",
-                             min = 40, max = 60, value = 50),
+                             min = 45, max = 55, value = 50),
                  sliderInput("sigma_2", "Simpangan baku populasi 2:",
                              min = 1, max = 20, value = 10)
                ),
@@ -862,7 +862,9 @@ server <- function(input, output) {
         stat_function(fun = dist_selisih_baku,
                       linewidth = 1.5,
                       color = "blue") +
-        ylim(0, .5) +
+        geom_point(aes(x = stat_uji, y = 0), alpha = alfa_ruas(k),
+                   size = 3, position = position_jitter(height = .03)) +
+        ylim(-.1, .5) +
         facet_grid(uji_t ~ .) +
         theme_bw(base_size = 16) +
         scale_color_manual(name = "Menolak H_0",
